@@ -47,7 +47,11 @@ const countryCodes = [
   { value: "+84", label: "Vietnam (+84)", country: "Vietnam" },
 ];
 
-export const EHGChatForm = () => {
+interface EHGChatFormProps {
+  onFormSubmit: (data: FormData) => void;
+}
+
+export const EHGChatForm = ({ onFormSubmit }: EHGChatFormProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
@@ -65,33 +69,13 @@ export const EHGChatForm = () => {
     setIsLoading(true);
     
     try {
-      const webhookData = {
-        fullName: data.fullName,
-        phoneNumber: `${data.countryCode}${data.phoneNumber}`,
-        email: data.email,
-        language: data.language,
-        timestamp: new Date().toISOString(),
-      };
-
-      const response = await fetch("https://n8n.anchi.io.vn/webhook-test/20bb0440-5bfe-4f26-9718-85e0e7a94e2c", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(webhookData),
+      toast({
+        title: "Welcome to EHG!",
+        description: "Tracy will be with you shortly to assist with your hospitality needs.",
       });
-
-      if (response.ok) {
-        toast({
-          title: "Welcome to EHG!",
-          description: "Tracy will be with you shortly to assist with your hospitality needs.",
-        });
-        
-        // Here you would typically redirect to the chat interface
-        console.log("Form submitted successfully:", webhookData);
-      } else {
-        throw new Error("Failed to submit form");
-      }
+      
+      // Pass the form data to parent component to show chat interface
+      onFormSubmit(data);
     } catch (error) {
       console.error("Error submitting form:", error);
       toast({

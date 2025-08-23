@@ -1,10 +1,33 @@
+import { useState } from "react";
 import { EHGChatForm } from "@/components/EHGChatForm";
+import { EHGChatInterface } from "@/components/EHGChatInterface";
 import { EHGPortfolio } from "@/components/EHGPortfolio";
 import { EHGServiceIcons } from "@/components/EHGServiceIcons";
 import ehgLogo from "@/assets/ehg-logo.png";
 import lasiestaOrnament from "@/assets/lasiesta-ornament.png";
 
+interface UserData {
+  fullName: string;
+  phoneNumber: string;
+  email: string;
+  countryCode: string;
+  language: string;
+}
+
 const Index = () => {
+  const [showChat, setShowChat] = useState(false);
+  const [userData, setUserData] = useState<UserData | null>(null);
+
+  const handleFormSubmit = (data: UserData) => {
+    setUserData(data);
+    setShowChat(true);
+  };
+
+  const handleBackToForm = () => {
+    setShowChat(false);
+    setUserData(null);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-ehg-cream to-background">
       {/* Header */}
@@ -48,9 +71,13 @@ const Index = () => {
               <EHGServiceIcons />
             </div>
 
-            {/* Right Form */}
+            {/* Right Form/Chat */}
             <div>
-              <EHGChatForm />
+              {showChat && userData ? (
+                <EHGChatInterface userData={userData} onBack={handleBackToForm} />
+              ) : (
+                <EHGChatForm onFormSubmit={handleFormSubmit} />
+              )}
             </div>
           </div>
         </div>
