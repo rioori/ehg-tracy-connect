@@ -28,6 +28,15 @@ interface EHGChatInterfaceProps {
 const emojis = ["😊", "😍", "👍", "❤️", "😂", "🙏", "✨", "🎉", "👋", "💯", "🔥", "😎", "🤝", "💼", "🏨"];
 
 export const EHGChatInterface = ({ userData, onBack }: EHGChatInterfaceProps) => {
+  // Safety check for userData
+  if (!userData) {
+    return (
+      <div className="bg-card rounded-lg shadow-[var(--shadow-elegant)] border border-border h-[600px] flex items-center justify-center">
+        <p className="text-muted-foreground">Loading chat...</p>
+      </div>
+    );
+  }
+
   const getWelcomeMessage = (language: string, fullName: string) => {
     const messages = {
       english: `Hi ${fullName}! I'm Tracy, your AI assistant from Elegance Hospitality Group. How can I help you today?`,
