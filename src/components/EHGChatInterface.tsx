@@ -2,14 +2,17 @@ import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Send, Bot, User, Smile, Paperclip, X } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { Send, Bot, User, Smile, Paperclip, X, Mic, MicOff } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { useConversation } from "@11labs/react";
 
 interface Message {
   id: string;
   content: string;
   sender: "user" | "tracy";
   timestamp: Date;
+  reactions?: string[];
 }
 
 interface UserData {
@@ -26,6 +29,7 @@ interface EHGChatInterfaceProps {
 }
 
 const emojis = ["😊", "😍", "👍", "❤️", "😂", "🙏", "✨", "🎉", "👋", "💯", "🔥", "😎", "🤝", "💼", "🏨"];
+const reactionEmojis = ["👍", "❤️", "😂", "😮", "😢", "🔥"];
 
 export const EHGChatInterface = ({ userData, onBack }: EHGChatInterfaceProps) => {
   // Safety check for userData
@@ -56,13 +60,18 @@ export const EHGChatInterface = ({ userData, onBack }: EHGChatInterfaceProps) =>
       content: getWelcomeMessage(userData.language, userData.fullName),
       sender: "tracy",
       timestamp: new Date(),
+      reactions: [],
     },
   ]);
   const [inputMessage, setInputMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [showReactionPicker, setShowReactionPicker] = useState<string | null>(null);
+  const [isVoiceMode, setIsVoiceMode] = useState(false);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  const conversation = useConversation();
 
   useEffect(() => {
     if (scrollAreaRef.current) {
@@ -141,6 +150,7 @@ export const EHGChatInterface = ({ userData, onBack }: EHGChatInterfaceProps) =>
       e.preventDefault();
       sendMessage();
     }
+    // Allow Shift+Enter to create new lines
   };
 
   const handleEmojiSelect = (emoji: string) => {
@@ -157,6 +167,39 @@ export const EHGChatInterface = ({ userData, onBack }: EHGChatInterfaceProps) =>
     if (file) {
       // Handle file upload logic here
       console.log("File selected:", file.name);
+    }
+  };
+
+  const addReaction = (messageId: string, emoji: string) => {
+    setMessages(prev => prev.map(msg => {
+      if (msg.id === messageId) {
+        const reactions = msg.reactions || [];
+        const hasReaction = reactions.includes(emoji);
+        return {
+          ...msg,
+          reactions: hasReaction 
+            ? reactions.filter(r => r !== emoji)
+            : [...reactions, emoji]
+        };
+      }
+      return msg;
+    }));
+    setShowReactionPicker(null);
+  };
+
+  const toggleVoiceMode = async () => {
+    if (!isVoiceMode) {
+      try {
+        await navigator.mediaDevices.getUserMedia({ audio: true });
+        setIsVoiceMode(true);
+        // You can start conversation here if needed
+        // await conversation.startSession({ agentId: "your-agent-id" });
+      } catch (error) {
+        console.error("Microphone access denied:", error);
+      }
+    } else {
+      setIsVoiceMode(false);
+      // await conversation.endSession();
     }
   };
 
@@ -213,11 +256,50 @@ export const EHGChatInterface = ({ userData, onBack }: EHGChatInterfaceProps) =>
                   </span>
                 </div>
                 <p className="text-sm whitespace-pre-wrap">{message.content}</p>
-                <p className={`text-xs mt-1 ${
-                  message.sender === "user" ? "text-white/70" : "text-muted-foreground"
-                }`}>
-                  {message.timestamp.toLocaleTimeString()}
-                </p>
+                <div className="flex items-center justify-between mt-1">
+                  <p className={`text-xs ${
+                    message.sender === "user" ? "text-white/70" : "text-muted-foreground"
+                  }`}>
+                    {message.timestamp.toLocaleTimeString()}
+                  </p>
+                  {message.sender === "tracy" && (
+                    <div className="flex items-center gap-1">
+                      {message.reactions && message.reactions.length > 0 && (
+                        <div className="flex gap-1">
+                          {message.reactions.map((reaction, idx) => (
+                            <span key={idx} className="text-xs">{reaction}</span>
+                          ))}
+                        </div>
+                      )}
+                      <Popover open={showReactionPicker === message.id} onOpenChange={(open) => setShowReactionPicker(open ? message.id : null)}>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-5 w-5 p-0 text-xs hover:bg-background/50"
+                          >
+                            <Smile className="h-3 w-3" />
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-2" align="end">
+                          <div className="flex gap-1">
+                            {reactionEmojis.map((emoji) => (
+                              <Button
+                                key={emoji}
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => addReaction(message.id, emoji)}
+                                className="h-6 w-6 p-0 text-sm hover:bg-muted"
+                              >
+                                {emoji}
+                              </Button>
+                            ))}
+                          </div>
+                        </PopoverContent>
+                      </Popover>
+                    </div>
+                  )}
+                </div>
               </div>
               {message.sender === "user" && (
                 <div className="bg-ehg-navy p-2 rounded-full h-8 w-8 flex items-center justify-center animate-fade-in">
@@ -251,25 +333,6 @@ export const EHGChatInterface = ({ userData, onBack }: EHGChatInterfaceProps) =>
         <div className="flex gap-2 items-end">
           <div className="flex-1">
             <div className="flex items-center gap-2 bg-muted rounded-lg p-2">
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                onClick={handleFileUpload}
-                className="p-1 h-8 w-8 hover:bg-background"
-              >
-                <Paperclip className="h-4 w-4 text-muted-foreground" />
-              </Button>
-              
-              <Input
-                value={inputMessage}
-                onChange={(e) => setInputMessage(e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder="Type your message..."
-                disabled={isLoading}
-                className="border-0 bg-transparent focus-visible:ring-0 flex-1"
-              />
-              
               <Popover open={showEmojiPicker} onOpenChange={setShowEmojiPicker}>
                 <PopoverTrigger asChild>
                   <Button
@@ -281,7 +344,7 @@ export const EHGChatInterface = ({ userData, onBack }: EHGChatInterfaceProps) =>
                     <Smile className="h-4 w-4 text-muted-foreground" />
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-64 p-2" align="end">
+                <PopoverContent className="w-64 p-2" align="start">
                   <div className="grid grid-cols-5 gap-2">
                     {emojis.map((emoji) => (
                       <Button
@@ -297,8 +360,39 @@ export const EHGChatInterface = ({ userData, onBack }: EHGChatInterfaceProps) =>
                   </div>
                 </PopoverContent>
               </Popover>
+              
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={handleFileUpload}
+                className="p-1 h-8 w-8 hover:bg-background"
+              >
+                <Paperclip className="h-4 w-4 text-muted-foreground" />
+              </Button>
+              
+              <Textarea
+                value={inputMessage}
+                onChange={(e) => setInputMessage(e.target.value)}
+                onKeyDown={handleKeyPress}
+                placeholder="Type your message... (Shift+Enter for new line)"
+                disabled={isLoading}
+                className="border-0 bg-transparent focus-visible:ring-0 flex-1 resize-none min-h-[40px] max-h-[120px]"
+                rows={1}
+              />
             </div>
           </div>
+          
+          <Button
+            onClick={toggleVoiceMode}
+            className={`h-10 w-10 p-0 rounded-lg transition-all duration-200 ${
+              isVoiceMode 
+                ? "bg-red-500 hover:bg-red-600 text-white" 
+                : "bg-muted hover:bg-muted/80 text-muted-foreground"
+            }`}
+          >
+            {isVoiceMode ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+          </Button>
           
           <Button
             onClick={sendMessage}
