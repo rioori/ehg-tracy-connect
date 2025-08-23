@@ -103,7 +103,7 @@ export const EHGChatInterface = ({ userData, onBack }: EHGChatInterfaceProps) =>
         timestamp: new Date().toISOString(),
       };
 
-      const response = await fetch("https://n8n.anchi.io.vn/webhook-test/20bb0440-5bfe-4f26-9718-85e0e7a94e2c", {
+      const response = await fetch("https://n8n.anchi.io.vn/webhook/20bb0440-5bfe-4f26-9718-85e0e7a94e2c", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -385,21 +385,21 @@ export const EHGChatInterface = ({ userData, onBack }: EHGChatInterfaceProps) =>
           
           <Button
             onClick={toggleVoiceMode}
-            className={`h-10 w-10 p-0 rounded-lg transition-all duration-200 ${
+            className={`h-8 w-8 p-0 rounded-md transition-all duration-200 ${
               isVoiceMode 
                 ? "bg-red-500 hover:bg-red-600 text-white" 
                 : "bg-muted hover:bg-muted/80 text-muted-foreground"
             }`}
           >
-            {isVoiceMode ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+            {isVoiceMode ? <MicOff className="h-3 w-3" /> : <Mic className="h-3 w-3" />}
           </Button>
           
           <Button
             onClick={sendMessage}
             disabled={isLoading || !inputMessage.trim()}
-            className="bg-ehg-gold hover:bg-ehg-gold-dark text-white h-10 w-10 p-0 rounded-lg transition-all duration-200"
+            className="bg-ehg-gold hover:bg-ehg-gold-dark text-white h-8 w-8 p-0 rounded-md transition-all duration-200"
           >
-            <Send className="h-4 w-4" />
+            <Send className="h-3 w-3" />
           </Button>
         </div>
         
