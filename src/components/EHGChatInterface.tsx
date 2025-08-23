@@ -103,11 +103,17 @@ export const EHGChatInterface = ({ userData, onBack }: EHGChatInterfaceProps) =>
       });
 
       if (response.ok) {
-        const data = await response.text();
+        const data = await response.json();
+        
+        // Extract the output from the response array
+        let responseContent = "I received your message. Let me help you with that!";
+        if (Array.isArray(data) && data.length > 0 && data[0].output) {
+          responseContent = data[0].output;
+        }
         
         const tracyMessage: Message = {
           id: (Date.now() + 1).toString(),
-          content: data || "I received your message. Let me help you with that!",
+          content: responseContent,
           sender: "tracy",
           timestamp: new Date(),
         };
