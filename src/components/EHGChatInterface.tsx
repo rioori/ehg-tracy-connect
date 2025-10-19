@@ -120,8 +120,13 @@ export const EHGChatInterface = ({ userData, onBack }: EHGChatInterfaceProps) =>
         
         // Check different possible response formats
         if (Array.isArray(data) && data.length > 0) {
+          // Format: [{ message: "..." }] - n8n webhook format
+          if (data[0].message) {
+            responseContent = data[0].message;
+            console.log("Using data[0].message:", responseContent);
+          }
           // Format: [{ output: "..." }]
-          if (data[0].output) {
+          else if (data[0].output) {
             responseContent = data[0].output;
             console.log("Using data[0].output:", responseContent);
           } 
