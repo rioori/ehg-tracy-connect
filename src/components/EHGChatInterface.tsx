@@ -43,15 +43,11 @@ export const EHGChatInterface = ({ userData, onBack }: EHGChatInterfaceProps) =>
 
   const getWelcomeMessage = (language: string, fullName: string) => {
     const messages = {
-      english: `Hi ${fullName}! I'm Tracy, your AI assistant from Elegance Hospitality Group. How can I help you today?`,
-      chinese: `您好 ${fullName}！我是Tracy，您在优雅酒店集团的AI助理。今天我能为您做些什么？`,
-      french: `Bonjour ${fullName}! Je suis Tracy, votre assistante IA d'Elegance Hospitality Group. Comment puis-je vous aider aujourd'hui?`,
-      japanese: `こんにちは ${fullName}さん！私はTracy、エレガンス・ホスピタリティ・グループのAIアシスタントです。今日はどのようにお手伝いできますか？`,
-      korean: `안녕하세요 ${fullName}님! 저는 엘레간스 호스피탤리티 그룹의 AI 어시스턴트 Tracy입니다. 오늘 어떻게 도와드릴까요?`,
-      spanish: `¡Hola ${fullName}! Soy Tracy, tu asistente de IA de Elegance Hospitality Group. ¿Cómo puedo ayudarte hoy?`,
-      vietnamese: `Xin chào ${fullName}! Tôi là Tracy, trợ lý AI của bạn từ Elegance Hospitality Group. Hôm nay tôi có thể giúp gì cho bạn?`,
+      vietnamese: `Xin chào ${fullName}! Tôi là AI Assistant của MPR. Tôi có thể giúp bạn tìm kiếm báo cáo thị trường phù hợp. Bạn cần báo cáo về lĩnh vực nào?`,
+      english: `Hi ${fullName}! I'm the MPR AI Assistant. I can help you find comprehensive market reports. What industry are you interested in?`,
+      chinese: `您好 ${fullName}！我是MPR的AI助理。我可以帮助您找到全面的市场报告。您对哪个行业感兴趣？`,
     };
-    return messages[language as keyof typeof messages] || messages.english;
+    return messages[language as keyof typeof messages] || messages.vietnamese;
   };
 
   const [messages, setMessages] = useState<Message[]>([
@@ -238,15 +234,15 @@ export const EHGChatInterface = ({ userData, onBack }: EHGChatInterfaceProps) =>
   return (
     <div className="bg-card rounded-lg shadow-[var(--shadow-elegant)] border border-border h-[600px] flex flex-col">
       {/* Header */}
-      <div className="bg-ehg-gold p-4 rounded-t-lg">
+      <div className="bg-gradient-to-r from-mpr-blue via-mpr-purple to-mpr-teal p-4 rounded-t-lg">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="bg-white p-2 rounded-lg animate-pulse">
-              <Bot className="h-5 w-5 text-ehg-gold" />
+            <div className="bg-white/20 backdrop-blur-sm p-2 rounded-lg animate-pulse">
+              <Bot className="h-5 w-5 text-white" />
             </div>
             <div>
-              <h3 className="text-white font-semibold">Tracy - EHG AI Assistant</h3>
-              <p className="text-white/80 text-sm">Online • Chatting with {userData.fullName}</p>
+              <h3 className="text-white font-semibold">MPR AI Assistant</h3>
+              <p className="text-white/80 text-sm">Online • Đang chat với {userData.fullName}</p>
             </div>
           </div>
           <Button
@@ -271,20 +267,20 @@ export const EHGChatInterface = ({ userData, onBack }: EHGChatInterfaceProps) =>
               }`}
             >
               {message.sender === "tracy" && (
-                <div className="bg-ehg-gold p-2 rounded-full h-8 w-8 flex items-center justify-center animate-fade-in">
+                <div className="bg-gradient-to-br from-mpr-blue to-mpr-purple p-2 rounded-full h-8 w-8 flex items-center justify-center animate-fade-in">
                   <Bot className="h-4 w-4 text-white" />
                 </div>
               )}
               <div
                 className={`max-w-[80%] rounded-lg p-3 animate-scale-in ${
                   message.sender === "user"
-                    ? "bg-ehg-gold text-white"
+                    ? "bg-gradient-to-r from-mpr-blue to-mpr-purple text-white"
                     : "bg-muted text-foreground"
                 }`}
               >
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-xs font-medium">
-                    {message.sender === "user" ? userData.fullName : "Tracy"}
+                    {message.sender === "user" ? userData.fullName : "MPR AI"}
                   </span>
                 </div>
                 <p className="text-sm whitespace-pre-wrap">{message.content}</p>
@@ -334,7 +330,7 @@ export const EHGChatInterface = ({ userData, onBack }: EHGChatInterfaceProps) =>
                 </div>
               </div>
               {message.sender === "user" && (
-                <div className="bg-ehg-navy p-2 rounded-full h-8 w-8 flex items-center justify-center animate-fade-in">
+                <div className="bg-mpr-navy p-2 rounded-full h-8 w-8 flex items-center justify-center animate-fade-in">
                   <User className="h-4 w-4 text-white" />
                 </div>
               )}
@@ -342,12 +338,12 @@ export const EHGChatInterface = ({ userData, onBack }: EHGChatInterfaceProps) =>
           ))}
           {isLoading && (
             <div className="flex gap-3 justify-start animate-fade-in">
-              <div className="bg-ehg-gold p-2 rounded-full h-8 w-8 flex items-center justify-center">
+              <div className="bg-gradient-to-br from-mpr-blue to-mpr-purple p-2 rounded-full h-8 w-8 flex items-center justify-center">
                 <Bot className="h-4 w-4 text-white" />
               </div>
               <div className="bg-muted text-foreground rounded-lg p-3 max-w-[80%]">
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="text-xs font-medium">Tracy</span>
+                  <span className="text-xs font-medium">MPR AI</span>
                 </div>
                 <div className="flex gap-1">
                   <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" />
@@ -429,7 +425,7 @@ export const EHGChatInterface = ({ userData, onBack }: EHGChatInterfaceProps) =>
           <Button
             onClick={sendMessage}
             disabled={isLoading || !inputMessage.trim()}
-            className="bg-ehg-gold hover:bg-ehg-gold-dark text-white h-8 w-8 p-0 rounded-md transition-all duration-200"
+            className="bg-gradient-to-r from-mpr-blue to-mpr-purple hover:opacity-90 text-white h-8 w-8 p-0 rounded-md transition-all duration-200"
           >
             <Send className="h-3 w-3" />
           </Button>

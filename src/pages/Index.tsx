@@ -1,10 +1,9 @@
 import { useState } from "react";
-import { EHGChatForm } from "@/components/EHGChatForm";
+import { MPRChatForm } from "@/components/MPRChatForm";
 import { EHGChatInterface } from "@/components/EHGChatInterface";
-import { EHGPortfolio } from "@/components/EHGPortfolio";
-import { EHGServiceIcons } from "@/components/EHGServiceIcons";
-import ehgLogo from "@/assets/ehg-logo.png";
-import lasiestaOrnament from "@/assets/lasiesta-ornament.png";
+import { MPRPortfolio } from "@/components/MPRPortfolio";
+import { MPRServiceIcons } from "@/components/MPRServiceIcons";
+import { BarChart3 } from "lucide-react";
 
 interface UserData {
   fullName: string;
@@ -29,18 +28,22 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-ehg-cream to-background">
+    <div className="min-h-screen bg-gradient-to-br from-background via-muted to-background">
       {/* Header */}
-      <header className="py-8 px-6">
+      <header className="py-8 px-6 bg-gradient-to-r from-mpr-blue via-mpr-purple to-mpr-teal">
         <div className="container mx-auto">
-          <div className="flex justify-center mb-4">
-            <div className="bg-ehg-gold rounded-lg p-4 shadow-[var(--shadow-elegant)]">
-              <img src={ehgLogo} alt="EHG - Elegance Hospitality Group" className="h-12" />
+          <div className="flex justify-center items-center gap-3 mb-4">
+            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+              <BarChart3 className="h-12 w-12 text-white" />
+            </div>
+            <div className="text-white">
+              <h1 className="text-3xl font-bold">MPR</h1>
+              <p className="text-sm opacity-90">Membership Premium Report</p>
             </div>
           </div>
           <div className="text-center">
-            <span className="inline-block bg-ehg-gold text-white px-4 py-2 rounded-full text-sm font-medium mb-6">
-              Premium Hospitality Services
+            <span className="inline-block bg-white/20 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm font-medium">
+              Giải pháp báo cáo thị trường chuyên nghiệp
             </span>
           </div>
         </div>
@@ -53,22 +56,34 @@ const Index = () => {
             {/* Left Content */}
             <div className="space-y-8">
               <div>
-                <h1 className="text-5xl font-bold text-ehg-gold mb-4">
-                  TRACY AI
+                <h1 className="text-5xl font-bold bg-gradient-to-r from-mpr-blue to-mpr-purple bg-clip-text text-transparent mb-4">
+                  MPR AI ASSISTANT
                 </h1>
                 <h2 className="text-3xl font-bold text-foreground mb-6">
-                  YOUR HOSPITALITY ASSISTANT
+                  TRỢ LÝ TÌM KIẾM BÁO CÁO THÔNG MINH
                 </h2>
-                <p className="text-lg text-muted-foreground leading-relaxed">
-                  Experience personalized hospitality services with Tracy, your 
-                  dedicated AI assistant from Elegance Hospitality Group. Get 
-                  instant assistance with bookings, dining reservations, and 
-                  travel services.
+                <p className="text-lg text-muted-foreground leading-relaxed mb-6">
+                  MPR - Membership Premium Report là giải pháp cung cấp báo cáo chuyên sâu thị trường toàn diện, 
+                  giúp bạn đưa ra quyết định kinh doanh sáng suốt.
                 </p>
+                <div className="space-y-3 text-sm text-muted-foreground">
+                  <div className="flex items-start gap-2">
+                    <span className="text-mpr-blue">✓</span>
+                    <span><strong>Báo cáo chuyên sâu:</strong> Phân tích chi tiết, dự báo chính xác về thị trường</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="text-mpr-purple">✓</span>
+                    <span><strong>Cập nhật liên tục:</strong> 10 báo cáo mới mỗi ngày</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="text-mpr-teal">✓</span>
+                    <span><strong>Nguồn uy tín:</strong> Euromonitor, Fitch Solutions, Statista, First Research, IBISWorld</span>
+                  </div>
+                </div>
               </div>
 
               {/* Service Icons */}
-              <EHGServiceIcons />
+              <MPRServiceIcons />
             </div>
 
             {/* Right Form/Chat */}
@@ -76,7 +91,7 @@ const Index = () => {
               {showChat && userData ? (
                 <EHGChatInterface userData={userData} onBack={handleBackToForm} />
               ) : (
-                <EHGChatForm onFormSubmit={handleFormSubmit} />
+                <MPRChatForm onFormSubmit={handleFormSubmit} />
               )}
             </div>
           </div>
@@ -84,36 +99,43 @@ const Index = () => {
       </section>
 
       {/* Portfolio Section */}
-      <EHGPortfolio />
+      <MPRPortfolio />
 
-      {/* Brand Showcase */}
+      {/* Contact Section */}
       <section className="py-16 bg-card border-t border-border">
         <div className="container mx-auto px-6 text-center">
-          <div className="flex items-center justify-center gap-8 mb-8">
-            <img src={lasiestaOrnament} alt="La Siesta Ornament" className="h-16 opacity-80" />
+          <h2 className="text-2xl font-bold text-foreground mb-4">Liên hệ với chúng tôi</h2>
+          <div className="flex flex-col md:flex-row items-center justify-center gap-6 mb-6">
             <div>
-              <h2 className="text-2xl font-bold text-foreground">LA SIESTA</h2>
-              <p className="text-sm text-muted-foreground">LUXURY BOUTIQUE HOTELS</p>
+              <p className="text-sm text-muted-foreground mb-2">Website</p>
+              <a href="https://www.baocao.site/" target="_blank" rel="noopener noreferrer" className="text-mpr-blue hover:text-mpr-blue-dark font-medium">
+                www.baocao.site
+              </a>
             </div>
-            <img src={lasiestaOrnament} alt="La Siesta Ornament" className="h-16 opacity-80" />
+            <div>
+              <p className="text-sm text-muted-foreground mb-2">Điện thoại</p>
+              <a href="tel:+84867786086" className="text-mpr-blue hover:text-mpr-blue-dark font-medium">
+                +84 867 786 086
+              </a>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground mb-2">Địa chỉ</p>
+              <p className="text-foreground font-medium">Ho Chi Minh, Phú Nhuận</p>
+            </div>
           </div>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
-            From the historic streets of Hanoi's Old Quarter to the vibrant heart of Ho Chi Minh City 
-            and the UNESCO heritage town of Hoi An, discover exceptional hospitality experiences.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <span className="bg-ehg-green text-white px-4 py-2 rounded-full text-sm font-medium">Classic Collection</span>
-            <span className="bg-ehg-navy text-white px-4 py-2 rounded-full text-sm font-medium">Premium Collection</span>
-            <span className="bg-ehg-gold text-white px-4 py-2 rounded-full text-sm font-medium">Resort & Spa</span>
+          <div className="flex flex-wrap justify-center gap-3">
+            <span className="bg-gradient-to-r from-mpr-blue to-mpr-blue-light text-white px-4 py-2 rounded-full text-sm font-medium">11-50 nhân viên</span>
+            <span className="bg-gradient-to-r from-mpr-purple to-purple-400 text-white px-4 py-2 rounded-full text-sm font-medium">Technology & Information</span>
+            <span className="bg-gradient-to-r from-mpr-teal to-cyan-400 text-white px-4 py-2 rounded-full text-sm font-medium">Thành lập 2024</span>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-8 bg-foreground text-background">
+      <footer className="py-8 bg-gradient-to-r from-mpr-navy to-foreground text-white">
         <div className="container mx-auto px-6 text-center">
-          <p className="text-sm opacity-80">
-            © 2024 Elegance Hospitality Group. All rights reserved.
+          <p className="text-sm opacity-90">
+            © 2024 MPR - Membership Premium Report. All rights reserved.
           </p>
         </div>
       </footer>

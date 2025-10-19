@@ -52,13 +52,13 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
-				ehg: {
-					gold: 'hsl(var(--ehg-gold))',
-					'gold-light': 'hsl(var(--ehg-gold-light))',
-					'gold-dark': 'hsl(var(--ehg-gold-dark))',
-					cream: 'hsl(var(--ehg-cream))',
-					green: 'hsl(var(--ehg-green))',
-					navy: 'hsl(var(--ehg-navy))'
+				mpr: {
+					blue: 'hsl(var(--mpr-blue))',
+					'blue-light': 'hsl(var(--mpr-blue-light))',
+					'blue-dark': 'hsl(var(--mpr-blue-dark))',
+					navy: 'hsl(var(--mpr-navy))',
+					purple: 'hsl(var(--mpr-purple))',
+					teal: 'hsl(var(--mpr-teal))'
 				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',

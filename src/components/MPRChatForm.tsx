@@ -16,42 +16,33 @@ import { useToast } from "@/hooks/use-toast";
 import { Bot } from "lucide-react";
 
 const formSchema = z.object({
-  fullName: z.string().min(2, "Full name must be at least 2 characters"),
-  phoneNumber: z.string().min(8, "Please enter a valid phone number"),
-  email: z.string().email("Please enter a valid email address"),
-  countryCode: z.string().min(1, "Please select a country code"),
-  language: z.string().min(1, "Please select a preferred language"),
+  fullName: z.string().min(2, "Họ tên phải có ít nhất 2 ký tự"),
+  phoneNumber: z.string().min(8, "Vui lòng nhập số điện thoại hợp lệ"),
+  email: z.string().email("Vui lòng nhập email hợp lệ"),
+  countryCode: z.string().min(1, "Vui lòng chọn mã quốc gia"),
+  language: z.string().min(1, "Vui lòng chọn ngôn ngữ"),
 });
 
 type FormData = z.infer<typeof formSchema>;
 
 const languages = [
+  { value: "vietnamese", label: "Tiếng Việt" },
   { value: "english", label: "English" },
-  { value: "chinese", label: "Chinese" },
-  { value: "french", label: "French" },
-  { value: "japanese", label: "Japanese" },
-  { value: "korean", label: "Korean" },
-  { value: "spanish", label: "Spanish" },
-  { value: "vietnamese", label: "Vietnamese" },
+  { value: "chinese", label: "中文" },
 ];
 
 const countryCodes = [
-  { value: "+1", label: "Canada (+1)", country: "Canada" },
-  { value: "+33", label: "France (+33)", country: "France" },
-  { value: "+49", label: "Germany (+49)", country: "Germany" },
-  { value: "+81", label: "Japan (+81)", country: "Japan" },
-  { value: "+82", label: "Korea (+82)", country: "Korea" },
-  { value: "+65", label: "Singapore (+65)", country: "Singapore" },
-  { value: "+34", label: "Spain (+34)", country: "Spain" },
+  { value: "+84", label: "Việt Nam (+84)", country: "Vietnam" },
   { value: "+1", label: "United States (+1)", country: "United States" },
-  { value: "+84", label: "Vietnam (+84)", country: "Vietnam" },
+  { value: "+65", label: "Singapore (+65)", country: "Singapore" },
+  { value: "+86", label: "China (+86)", country: "China" },
 ];
 
-interface EHGChatFormProps {
+interface MPRChatFormProps {
   onFormSubmit: (data: FormData) => void;
 }
 
-export const EHGChatForm = ({ onFormSubmit }: EHGChatFormProps) => {
+export const MPRChatForm = ({ onFormSubmit }: MPRChatFormProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
@@ -60,7 +51,6 @@ export const EHGChatForm = ({ onFormSubmit }: EHGChatFormProps) => {
     handleSubmit,
     formState: { errors },
     setValue,
-    watch,
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
   });
@@ -70,17 +60,16 @@ export const EHGChatForm = ({ onFormSubmit }: EHGChatFormProps) => {
     
     try {
       toast({
-        title: "Welcome to EHG!",
-        description: "Tracy will be with you shortly to assist with your hospitality needs.",
+        title: "Chào mừng đến với MPR!",
+        description: "AI Assistant sẽ hỗ trợ bạn tìm kiếm báo cáo phù hợp.",
       });
       
-      // Pass the form data to parent component to show chat interface
       onFormSubmit(data);
     } catch (error) {
       console.error("Error submitting form:", error);
       toast({
-        title: "Connection Error",
-        description: "Unable to start chat. Please try again.",
+        title: "Lỗi kết nối",
+        description: "Không thể bắt đầu chat. Vui lòng thử lại.",
         variant: "destructive",
       });
     } finally {
@@ -91,30 +80,30 @@ export const EHGChatForm = ({ onFormSubmit }: EHGChatFormProps) => {
   return (
     <div className="bg-card rounded-lg p-6 shadow-[var(--shadow-elegant)] border border-border">
       <div className="flex items-center gap-3 mb-6">
-        <div className="bg-ehg-gold p-3 rounded-lg">
+        <div className="bg-gradient-to-br from-mpr-blue to-mpr-purple p-3 rounded-lg">
           <Bot className="h-6 w-6 text-white" />
         </div>
         <div>
-          <h3 className="text-lg font-semibold text-foreground">Tracy - EHG AI Assistant</h3>
-          <p className="text-sm text-muted-foreground">Welcome to EHG</p>
+          <h3 className="text-lg font-semibold text-foreground">MPR AI Assistant</h3>
+          <p className="text-sm text-muted-foreground">Tìm kiếm báo cáo thông minh</p>
         </div>
       </div>
 
       <div className="mb-6">
-        <h4 className="text-base font-medium text-foreground mb-2">Let's get started!</h4>
+        <h4 className="text-base font-medium text-foreground mb-2">Bắt đầu trò chuyện!</h4>
         <p className="text-sm text-muted-foreground">
-          Please provide your information to chat with Tracy
+          Vui lòng cung cấp thông tin để chat với AI Assistant
         </p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
           <Label htmlFor="fullName" className="text-sm font-medium text-foreground">
-            Full Name *
+            Họ và tên *
           </Label>
           <Input
             id="fullName"
-            placeholder="Enter your full name"
+            placeholder="Nhập họ tên của bạn"
             {...register("fullName")}
             className="mt-1"
           />
@@ -125,11 +114,11 @@ export const EHGChatForm = ({ onFormSubmit }: EHGChatFormProps) => {
 
         <div>
           <Label htmlFor="phoneNumber" className="text-sm font-medium text-foreground">
-            Phone Number *
+            Số điện thoại *
           </Label>
           <div className="flex gap-2 mt-1">
             <Select onValueChange={(value) => setValue("countryCode", value)}>
-              <SelectTrigger className="w-32">
+              <SelectTrigger className="w-40">
                 <SelectValue placeholder="+84" />
               </SelectTrigger>
               <SelectContent className="bg-card border border-border">
@@ -142,7 +131,7 @@ export const EHGChatForm = ({ onFormSubmit }: EHGChatFormProps) => {
             </Select>
             <Input
               id="phoneNumber"
-              placeholder="Phone number"
+              placeholder="Số điện thoại"
               {...register("phoneNumber")}
               className="flex-1"
             />
@@ -157,12 +146,12 @@ export const EHGChatForm = ({ onFormSubmit }: EHGChatFormProps) => {
 
         <div>
           <Label htmlFor="email" className="text-sm font-medium text-foreground">
-            Email Address *
+            Email *
           </Label>
           <Input
             id="email"
             type="email"
-            placeholder="Enter your email"
+            placeholder="Nhập email của bạn"
             {...register("email")}
             className="mt-1"
           />
@@ -173,11 +162,11 @@ export const EHGChatForm = ({ onFormSubmit }: EHGChatFormProps) => {
 
         <div>
           <Label htmlFor="language" className="text-sm font-medium text-foreground">
-            Preferred Language
+            Ngôn ngữ ưa thích
           </Label>
           <Select onValueChange={(value) => setValue("language", value)}>
             <SelectTrigger className="mt-1">
-              <SelectValue placeholder="English" />
+              <SelectValue placeholder="Tiếng Việt" />
             </SelectTrigger>
             <SelectContent className="bg-card border border-border">
               {languages.map((language) => (
@@ -195,9 +184,9 @@ export const EHGChatForm = ({ onFormSubmit }: EHGChatFormProps) => {
         <Button
           type="submit"
           disabled={isLoading}
-          className="w-full bg-ehg-gold hover:bg-ehg-gold-dark text-white font-medium py-3 rounded-lg transition-all duration-200"
+          className="w-full bg-gradient-to-r from-mpr-blue to-mpr-purple hover:opacity-90 text-white font-medium py-3 rounded-lg transition-all duration-200"
         >
-          {isLoading ? "Connecting..." : "Start Chatting with Tracy"}
+          {isLoading ? "Đang kết nối..." : "Bắt đầu chat với AI Assistant"}
         </Button>
       </form>
     </div>
