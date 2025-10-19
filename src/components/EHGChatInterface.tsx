@@ -113,11 +113,38 @@ export const EHGChatInterface = ({ userData, onBack }: EHGChatInterfaceProps) =>
 
       if (response.ok) {
         const data = await response.json();
+        console.log("Webhook response:", JSON.stringify(data, null, 2));
         
-        // Extract the output from the response array
+        // Extract the output from the response - handle multiple formats
         let responseContent = "I received your message. Let me help you with that!";
-        if (Array.isArray(data) && data.length > 0 && data[0].output) {
-          responseContent = data[0].output;
+        
+        // Check different possible response formats
+        if (Array.isArray(data) && data.length > 0) {
+          // Format: [{ output: "..." }]
+          if (data[0].output) {
+            responseContent = data[0].output;
+            console.log("Using data[0].output:", responseContent);
+          } 
+          // Format: ["direct string"]
+          else if (typeof data[0] === 'string') {
+            responseContent = data[0];
+            console.log("Using data[0] as string:", responseContent);
+          }
+        } 
+        // Format: { output: "..." }
+        else if (data && typeof data === 'object' && data.output) {
+          responseContent = data.output;
+          console.log("Using data.output:", responseContent);
+        }
+        // Format: { message: "..." } or { response: "..." }
+        else if (data && typeof data === 'object') {
+          if (data.message) {
+            responseContent = data.message;
+            console.log("Using data.message:", responseContent);
+          } else if (data.response) {
+            responseContent = data.response;
+            console.log("Using data.response:", responseContent);
+          }
         }
         
         const tracyMessage: Message = {
