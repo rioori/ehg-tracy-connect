@@ -78,6 +78,9 @@ export const EHGChatInterface = ({ userData, onBack }: EHGChatInterfaceProps) =>
   const sendMessage = async () => {
     if (!inputMessage.trim()) return;
 
+    console.log("📤 sendMessage called with:", inputMessage);
+    console.log("👤 userData:", userData);
+
     const userMessage: Message = {
       id: Date.now().toString(),
       content: inputMessage,
@@ -98,6 +101,9 @@ export const EHGChatInterface = ({ userData, onBack }: EHGChatInterfaceProps) =>
         message: inputMessage,
         timestamp: new Date().toISOString(),
       };
+
+      console.log("📦 Webhook payload:", webhookData);
+      console.log("🔗 Calling webhook:", "https://n8n.anchi.io.vn/webhook/20bb0440-5bfe-4f26-9718-85e0e7a94e2c");
 
       const response = await fetch("https://n8n.anchi.io.vn/webhook/20bb0440-5bfe-4f26-9718-85e0e7a94e2c", {
         method: "POST",

@@ -53,6 +53,10 @@ export const MPRChatForm = ({ onFormSubmit }: MPRChatFormProps) => {
     setValue,
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      countryCode: "+84",
+      language: "vietnamese",
+    },
   });
 
   const onSubmit = async (data: FormData) => {
