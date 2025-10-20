@@ -105,13 +105,17 @@ export const EHGChatInterface = ({ userData, onBack }: EHGChatInterfaceProps) =>
       console.log("📦 Webhook payload:", webhookData);
       console.log("🔗 Calling webhook:", "https://n8n.anchi.io.vn/webhook/20bb0440-5bfe-4f26-9718-85e0e7a94e2c");
 
-      const response = await fetch("https://n8n.anchi.io.vn/webhook/20bb0440-5bfe-4f26-9718-85e0e7a94e2c", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(webhookData),
-      });
+      // Call through Cloud Edge Function proxy to avoid CORS issues
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/webhook-proxy`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(webhookData),
+        }
+      );
 
       if (response.ok) {
         const data = await response.json();
