@@ -120,7 +120,7 @@ export const EHGChatInterface = ({ userData, onBack }: EHGChatInterfaceProps) =>
 
       if (response.ok) {
         const data = await response.json();
-        console.log("Webhook response:", JSON.stringify(data, null, 2));
+        console.log("✅ Webhook response:", JSON.stringify(data, null, 2));
         
         // Extract the output from the response - handle multiple formats
         let responseContent = "I received your message. Let me help you with that!";
@@ -130,32 +130,41 @@ export const EHGChatInterface = ({ userData, onBack }: EHGChatInterfaceProps) =>
           // Format: [{ message: "..." }] - n8n webhook format
           if (data[0].message) {
             responseContent = data[0].message;
-            console.log("Using data[0].message:", responseContent);
+            console.log("📝 Using data[0].message:", responseContent);
           }
           // Format: [{ output: "..." }]
           else if (data[0].output) {
             responseContent = data[0].output;
-            console.log("Using data[0].output:", responseContent);
+            console.log("📝 Using data[0].output:", responseContent);
           } 
           // Format: ["direct string"]
           else if (typeof data[0] === 'string') {
             responseContent = data[0];
-            console.log("Using data[0] as string:", responseContent);
+            console.log("📝 Using data[0] as string:", responseContent);
+          }
+          // Fallback: show the raw data for debugging
+          else {
+            responseContent = `Debug: n8n returned: ${JSON.stringify(data)}`;
+            console.log("⚠️ Unhandled format, showing raw:", responseContent);
           }
         } 
         // Format: { output: "..." }
         else if (data && typeof data === 'object' && data.output) {
           responseContent = data.output;
-          console.log("Using data.output:", responseContent);
+          console.log("📝 Using data.output:", responseContent);
         }
         // Format: { message: "..." } or { response: "..." }
         else if (data && typeof data === 'object') {
           if (data.message) {
             responseContent = data.message;
-            console.log("Using data.message:", responseContent);
+            console.log("📝 Using data.message:", responseContent);
           } else if (data.response) {
             responseContent = data.response;
-            console.log("Using data.response:", responseContent);
+            console.log("📝 Using data.response:", responseContent);
+          } else {
+            // Show raw response for debugging
+            responseContent = `Debug: n8n returned: ${JSON.stringify(data)}`;
+            console.log("⚠️ Unhandled format, showing raw:", responseContent);
           }
         }
         
